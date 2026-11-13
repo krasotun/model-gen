@@ -1,0 +1,11 @@
+root = true
+
+[*.cs]
+# IDE0040: модификатор доступа обязателен везде
+dotnet_style_require_accessibility_modifiers = always:warning
+# IDE0161: namespace ModelGen; вместо блока в скобках
+csharp_style_namespace_declarations = file_scoped:warning
+
+# test names use underscores: Method_condition_result
+[tests/**.cs]
+dotnet_diagnostic.CA1707.severity = none
