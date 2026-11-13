@@ -1,4 +1,4 @@
-.PHONY: install build test format format-check check run
+.PHONY: install build test format test-watch format-check check run
 
 install:
 	dotnet restore
@@ -9,6 +9,9 @@ build:
 
 test:
 	dotnet test
+
+test-watch:
+	dotnet watch test --project tests/ModelGen.Tests
 
 format:
 	dotnet csharpier format .
