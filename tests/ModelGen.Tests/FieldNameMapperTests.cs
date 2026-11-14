@@ -12,7 +12,4 @@ public class FieldNameMapperTests
         var mappedField = FieldNameMapper.Transform(input);
         Assert.Equal(expected, mappedField);
     }
-
-    [Fact(Skip = "first__Name throws IndexOutOfRangeException, decide in lesson 18")]
-    public void Double_underscore_is_handled() { }
 }
