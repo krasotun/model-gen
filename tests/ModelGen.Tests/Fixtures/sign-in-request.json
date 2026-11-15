@@ -1,0 +1,17 @@
+{
+  "definitions": {
+    "SignInRequest": {
+      "required": ["login", "password"],
+      "properties": {
+        "login": {
+          "type": "string",
+          "description": "User login"
+        },
+        "password": {
+          "type": "string",
+          "description": "Password"
+        }
+      }
+    }
+  }
+}

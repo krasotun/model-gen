@@ -1,0 +1,13 @@
+{
+  "definitions": {
+    "CreateChatRequest": {
+      "required": ["title"],
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Chat title"
+        }
+      }
+    }
+  }
+}
