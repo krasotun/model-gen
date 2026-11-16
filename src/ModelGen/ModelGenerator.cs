@@ -29,20 +29,9 @@ public static class ModelGenerator
             {
                 var propertyName = property.Name;
 
-                property.Value.TryGetProperty("type", out var typeElement);
+                var csharpType = FieldTypeMapper.Transform(property.Value, propertyName);
 
-                var swaggerType = typeElement.GetString();
-
-                var charpType = swaggerType switch
-                {
-                    "string" => "string",
-                    "integer" => "int",
-                    _ => throw new NotSupportedException(
-                        $"Unsupported type '{swaggerType}' in field '{propertyName}'"
-                    ),
-                };
-
-                props.Add($"{charpType} {FieldNameMapper.Transform(propertyName)}");
+                props.Add($"{csharpType} {FieldNameMapper.Transform(propertyName)}");
             }
 
             sb.Append(string.Join(", ", props)).Append(");");
