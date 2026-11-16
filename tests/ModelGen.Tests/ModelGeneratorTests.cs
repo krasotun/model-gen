@@ -22,6 +22,17 @@ public class ModelGeneratorTests
         Assert.Equal(expected, ModelGenerator.Generate(swaggerJson));
     }
 
+    [Fact]
+    public void Generates_record_for_schema_with_string_and_integer_field()
+    {
+        var swaggerJson = ReadFixture("leaderboard-request.json");
+
+        var expected =
+            "public record LeaderboardRequest(string RatingFieldName, int Cursor, int Limit);";
+
+        Assert.Equal(expected, ModelGenerator.Generate(swaggerJson));
+    }
+
     private static string ReadFixture(string name)
     {
         var path = Path.Combine(AppContext.BaseDirectory, "Fixtures", name);

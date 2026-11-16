@@ -28,7 +28,21 @@ public static class ModelGenerator
             foreach (JsonProperty property in properties.EnumerateObject())
             {
                 var propertyName = property.Name;
-                props.Add($"string {FieldNameMapper.Transform(propertyName)}");
+
+                property.Value.TryGetProperty("type", out var typeElement);
+
+                var swaggerType = typeElement.GetString();
+
+                var charpType = swaggerType switch
+                {
+                    "string" => "string",
+                    "integer" => "int",
+                    _ => throw new NotSupportedException(
+                        $"Unsupported type '{swaggerType}' in field '{propertyName}'"
+                    ),
+                };
+
+                props.Add($"{charpType} {FieldNameMapper.Transform(propertyName)}");
             }
 
             sb.Append(string.Join(", ", props)).Append(");");
