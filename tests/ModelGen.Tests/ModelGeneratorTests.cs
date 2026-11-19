@@ -33,6 +33,16 @@ public class ModelGeneratorTests
         Assert.Equal(expected, ModelGenerator.Generate(swaggerJson));
     }
 
+    [Fact]
+    public void Generates_record_for_schema_with_array_field()
+    {
+        var swaggerJson = ReadFixture("users-request.json");
+
+        var expected = "public record UsersRequest(int[] Users, int ChatId);";
+
+        Assert.Equal(expected, ModelGenerator.Generate(swaggerJson));
+    }
+
     private static string ReadFixture(string name)
     {
         var path = Path.Combine(AppContext.BaseDirectory, "Fixtures", name);

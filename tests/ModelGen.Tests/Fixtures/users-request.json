@@ -1,0 +1,22 @@
+{
+  "definitions": {
+    "UsersRequest": {
+      "required": [
+        "users",
+        "chatId"
+      ],
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "chatId": {
+          "type": "integer",
+          "description": "Chat id"
+        }
+      }
+    }
+  }
+}
