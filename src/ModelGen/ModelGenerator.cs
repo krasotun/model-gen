@@ -28,10 +28,9 @@ public static class ModelGenerator
             foreach (JsonProperty property in properties.EnumerateObject())
             {
                 var propertyName = property.Name;
-
-                var csharpType = FieldTypeMapper.Transform(property.Value, propertyName);
-
-                props.Add($"{csharpType} {FieldNameMapper.Transform(propertyName)}");
+                props.Add(
+                    $"{FieldTypeMapper.Transform(property.Value, propertyName)} {FieldNameMapper.Transform(propertyName)}"
+                );
             }
 
             sb.Append(string.Join(", ", props)).Append(");");

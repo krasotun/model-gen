@@ -32,17 +32,21 @@ public record UserResponse(int Id, string FirstName, string Login);
 - **Вход и выход.** На входе — JSON-файл в формате Swagger 2.0 с диска, путь передаётся параметром командной строки. На выходе — один файл `Models.cs` со всеми моделями.
 - **Типы.** Генератор переводит типы строго по спецификации и не угадывает по `description`:
 
-  | Swagger | C# |
-  |---|---|
-  | `string` | `string` |
-  | `integer` | `int` |
-  | `number` + `"format": "integer"` | `int` |
-  | `number` без `format` | `double` |
-  | `array` из `integer` | `int[]` |
+  | Swagger                          | C#         |
+  | -------------------------------- | ---------- |
+  | `string`                         | `string`   |
+  | `integer`                        | `int`      |
+  | `number` + `"format": "integer"` | `int`      |
+  | `number` без `format`            | `double`   |
+  | `array` из `integer`             | `int[]`    |
+  | `array` из `string`              | `string[]` |
 
-  Открыто: `object`, `$ref`, `string` с `format: date-time`, массивы строк и массивы `$ref`.
+  Открыто: `object`, `$ref`, `string` с `format: date-time`, массивы `$ref`.
 
-  Известная кривизна входа: `id` в `SignUpResponse` и `CreateChatResponse` описаны как `number` без `format`, поэтому станут `double`.
+  Известная кривизна входа:
+  - `id` в `SignUpResponse` и `CreateChatResponse` описаны как `number` без `format`, поэтому станут `double`.
+  - `user` в `last_message` у `ChatsResponse` - имеет ошибочный format date-time. У `$ref` есть соседи. Генератор будет игнорировать соседей. `user` будет обработан, когда появится поведение с `$ref`.
+
 - **Обязательность.** Открыто: как отличить в `record` поле из `required` от необязательного.
 - **Кривой вход.**
   - Имя поля, которое не переводится в PascalCase (например, `first__Name`): вся модель пропускается, в консоль выводится ворнинг, остальные модели генерируются. Открыто: если на пропущенную модель ссылается `$ref`, `Models.cs` не соберётся.
@@ -72,16 +76,16 @@ make run
 
 ## Команды
 
-| Команда | Что делает |
-| --- | --- |
-| `make install` | Восстанавливает NuGet-пакеты и локальные инструменты из `dotnet-tools.json` |
-| `make build` | Собирает решение; предупреждения анализаторов считаются ошибками |
-| `make test` | Запускает тесты xUnit |
-| `make test-watch` | Перезапускает тесты при сохранении файла |
-| `make format` | Форматирует код через CSharpier |
-| `make format-check` | Проверяет форматирование, ничего не меняя |
-| `make check` | Полная проверка перед коммитом: `format-check`, `build`, `test` |
-| `make run` | Запускает программу |
+| Команда             | Что делает                                                                  |
+| ------------------- | --------------------------------------------------------------------------- |
+| `make install`      | Восстанавливает NuGet-пакеты и локальные инструменты из `dotnet-tools.json` |
+| `make build`        | Собирает решение; предупреждения анализаторов считаются ошибками            |
+| `make test`         | Запускает тесты xUnit                                                       |
+| `make test-watch`   | Перезапускает тесты при сохранении файла                                    |
+| `make format`       | Форматирует код через CSharpier                                             |
+| `make format-check` | Проверяет форматирование, ничего не меняя                                   |
+| `make check`        | Полная проверка перед коммитом: `format-check`, `build`, `test`             |
+| `make run`          | Запускает программу                                                         |
 
 Один тест по имени: `dotnet test --filter <часть имени>`.
 

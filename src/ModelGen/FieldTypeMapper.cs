@@ -9,6 +9,7 @@ public static class FieldTypeMapper
         var swaggerType = field.TryGetProperty("type", out var typeElement)
             ? typeElement.GetString()
             : null;
+
         return swaggerType switch
         {
             "string" => "string",
