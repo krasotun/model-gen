@@ -15,6 +15,12 @@ public class FieldTypeMapperTests
     [Theory]
     [InlineData("""{ "type": "number", "format": "integer" }""", "int")]
     [InlineData("""{ "type": "number" }""", "double")]
+    [InlineData("""{ "type": "array", "items": { "type": "integer" } }""", "int[]")]
+    [InlineData(
+        """{ "type": "array", "items": { "type": "number", "format": "integer" } }""",
+        "int[]"
+    )]
+    [InlineData("""{ "type": "array", "items": { "type": "string" } }""", "string[]")]
     public void Maps_swagger_type_to_csharp_type(string fieldJson, string expectedType)
     {
         using var doc = JsonDocument.Parse(fieldJson);
