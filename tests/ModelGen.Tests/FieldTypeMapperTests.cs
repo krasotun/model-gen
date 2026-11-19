@@ -12,6 +12,16 @@ public class FieldTypeMapperTests
         Assert.Throws<NotSupportedException>(() => FieldTypeMapper.Transform(doc.RootElement));
     }
 
+    [Fact]
+    public void Throws_NotSupportedException_for_nested_array()
+    {
+        using var doc = JsonDocument.Parse(
+            """{ "type": "array", "items": { "type": "array", "items": { "type": "string" } } }"""
+        );
+
+        Assert.Throws<NotSupportedException>(() => FieldTypeMapper.Transform(doc.RootElement));
+    }
+
     [Theory]
     [InlineData("""{ "type": "number", "format": "integer" }""", "int")]
     [InlineData("""{ "type": "number" }""", "double")]

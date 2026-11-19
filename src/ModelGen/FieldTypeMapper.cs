@@ -9,17 +9,9 @@ public static class FieldTypeMapper
         var swaggerType = GetStringProperty(field, "type");
         var swaggerFormat = GetStringProperty(field, "format");
 
-        if (swaggerType == "array")
-        {
-            var itemsElement = field.GetProperty("items");
-
-            var itemsSwaggerType = GetStringProperty(itemsElement, "type");
-            var itemsSwaggerFormat = GetStringProperty(itemsElement, "format");
-
-            return GetCsharpType(itemsSwaggerType, itemsSwaggerFormat) + "[]";
-        }
-
-        return GetCsharpType(swaggerType, swaggerFormat);
+        return swaggerType == "array"
+            ? GetArrayType(field)
+            : GetScalarType(swaggerType, swaggerFormat);
     }
 
     private static string? GetStringProperty(JsonElement field, string propertyName) =>
@@ -27,9 +19,8 @@ public static class FieldTypeMapper
             ? propertyElement.GetString()
             : null;
 
-    private static string GetCsharpType(string? swaggerType, string? swaggerFormat)
-    {
-        return swaggerType switch
+    private static string GetScalarType(string? swaggerType, string? swaggerFormat) =>
+        swaggerType switch
         {
             "string" => "string",
             "number" when swaggerFormat == "integer" => "int",
@@ -38,5 +29,14 @@ public static class FieldTypeMapper
 
             _ => throw new NotSupportedException($"Unsupported type '{swaggerType}'"),
         };
+
+    private static string GetArrayType(JsonElement field)
+    {
+        var itemsElement = field.GetProperty("items");
+
+        var itemsSwaggerType = GetStringProperty(itemsElement, "type");
+        var itemsSwaggerFormat = GetStringProperty(itemsElement, "format");
+
+        return GetScalarType(itemsSwaggerType, itemsSwaggerFormat) + "[]";
     }
 }
