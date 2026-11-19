@@ -29,7 +29,7 @@ public static class ModelGenerator
             {
                 var propertyName = property.Name;
                 props.Add(
-                    $"{FieldTypeMapper.Transform(property.Value, propertyName)} {FieldNameMapper.Transform(propertyName)}"
+                    $"{FieldTypeMapper.Transform(property.Value)} {FieldNameMapper.Transform(propertyName)}"
                 );
             }
 

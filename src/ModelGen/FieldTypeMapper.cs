@@ -4,19 +4,24 @@ namespace ModelGen;
 
 public static class FieldTypeMapper
 {
-    public static string Transform(JsonElement field, string fieldName)
+    public static string Transform(JsonElement field)
     {
-        var swaggerType = field.TryGetProperty("type", out var typeElement)
-            ? typeElement.GetString()
-            : null;
+        var swaggerType = GetStringProperty(field, "type");
+        var swaggerFormat = GetStringProperty(field, "format");
 
         return swaggerType switch
         {
             "string" => "string",
+            "number" when swaggerFormat == "integer" => "int",
+            "number" => "double",
             "integer" => "int",
-            _ => throw new NotSupportedException(
-                $"Unsupported type '{swaggerType}' in field '{fieldName}'"
-            ),
+
+            _ => throw new NotSupportedException($"Unsupported type '{swaggerType}'"),
         };
     }
+
+    private static string? GetStringProperty(JsonElement field, string propertyName) =>
+        field.TryGetProperty(propertyName, out var propertyElement)
+            ? propertyElement.GetString()
+            : null;
 }
