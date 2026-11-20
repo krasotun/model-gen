@@ -6,6 +6,14 @@ public static class FieldTypeMapper
 {
     public static string Transform(JsonElement field)
     {
+        if (field.TryGetProperty("$ref", out var refElement))
+        {
+            var refElementValue = refElement.GetString();
+
+            if (refElementValue != null)
+                return refElementValue.Split('/')[^1];
+        }
+
         var swaggerType = GetStringProperty(field, "type");
         var swaggerFormat = GetStringProperty(field, "format");
 
@@ -33,6 +41,14 @@ public static class FieldTypeMapper
     private static string GetArrayType(JsonElement field)
     {
         var itemsElement = field.GetProperty("items");
+
+        if (itemsElement.TryGetProperty("$ref", out var refElement))
+        {
+            var refElementValue = refElement.GetString();
+
+            if (refElementValue != null)
+                return refElementValue.Split('/')[^1] + "[]";
+        }
 
         var itemsSwaggerType = GetStringProperty(itemsElement, "type");
         var itemsSwaggerFormat = GetStringProperty(itemsElement, "format");
