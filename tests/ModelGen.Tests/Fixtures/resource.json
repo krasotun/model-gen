@@ -1,0 +1,46 @@
+{
+  "definitions": {
+    "Resource": {
+      "required": [
+        "id",
+        "user_id",
+        "path",
+        "filename",
+        "content_type",
+        "content_size",
+        "upload_date"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Message id"
+        },
+        "user_id": {
+          "type": "integer",
+          "description": "User id"
+        },
+        "path": {
+          "type": "string",
+          "description": "Server relative file path"
+        },
+        "filename": {
+          "type": "string",
+          "description": "Initial file name"
+        },
+        "content_type": {
+          "type": "string",
+          "description": "File content type (e.g \"image/jpeg\" for .jpg images)"
+        },
+        "content_size": {
+          "type": "integer",
+          "description": "File size in bytes"
+        },
+        "upload_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Resource uploading time"
+        }
+      }
+    }
+  }
+}

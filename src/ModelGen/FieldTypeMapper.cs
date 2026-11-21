@@ -30,6 +30,7 @@ public static class FieldTypeMapper
     private static string GetScalarType(string? swaggerType, string? swaggerFormat) =>
         swaggerType switch
         {
+            "string" when swaggerFormat == "date-time" => "DateTimeOffset",
             "string" => "string",
             "number" when swaggerFormat == "integer" => "int",
             "number" => "double",

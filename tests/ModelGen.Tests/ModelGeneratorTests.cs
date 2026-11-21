@@ -43,6 +43,17 @@ public class ModelGeneratorTests
         Assert.Equal(expected, ModelGenerator.Generate(swaggerJson));
     }
 
+    [Fact]
+    public void Generates_record_for_schema_with_datetime_field()
+    {
+        var swaggerJson = ReadFixture("resource.json");
+
+        var expected =
+            "public record Resource(int Id, int UserId, string Path, string Filename, string ContentType, int ContentSize, DateTimeOffset UploadDate);";
+
+        Assert.Equal(expected, ModelGenerator.Generate(swaggerJson));
+    }
+
     private static string ReadFixture(string name)
     {
         var path = Path.Combine(AppContext.BaseDirectory, "Fixtures", name);

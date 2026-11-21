@@ -44,6 +44,11 @@ public class FieldTypeMapperTests
         """{ "type": "array", "items": { "$ref": "#/definitions/Sticker" } }""",
         "Sticker[]"
     )]
+    [InlineData("""{ "type": "string", "format": "date-time" }""", "DateTimeOffset")]
+    [InlineData(
+        """{ "type": "array", "items": { "type": "string", "format": "date-time" } }""",
+        "DateTimeOffset[]"
+    )]
     public void Maps_swagger_type_to_csharp_type(string fieldJson, string expectedType)
     {
         using var doc = JsonDocument.Parse(fieldJson);

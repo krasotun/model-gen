@@ -32,16 +32,17 @@ public record UserResponse(int Id, string FirstName, string Login);
 - **Вход и выход.** На входе — JSON-файл в формате Swagger 2.0 с диска, путь передаётся параметром командной строки. На выходе — один файл `Models.cs` со всеми моделями.
 - **Типы.** Генератор переводит типы строго по спецификации и не угадывает по `description`:
 
-  | Swagger                          | C#         |
-  | -------------------------------- | ---------- |
-  | `string`                         | `string`   |
-  | `integer`                        | `int`      |
-  | `number` + `"format": "integer"` | `int`      |
-  | `number` без `format`            | `double`   |
-  | `array` из `integer`             | `int[]`    |
-  | `array` из `string`              | `string[]` |
+  | Swagger                          | C#               |
+  | -------------------------------- | ---------------- |
+  | `string`                         | `string`         |
+  | `string` + `format: date-time`   | `DateTimeOffset` |
+  | `integer`                        | `int`            |
+  | `number` + `"format": "integer"` | `int`            |
+  | `number` без `format`            | `double`         |
+  | `array` из `integer`             | `int[]`          |
+  | `array` из `string`              | `string[]`       |
 
-  Открыто: `object`, `$ref`, `string` с `format: date-time`, массивы `$ref`.
+  Открыто: `object`.
 
   Известная кривизна входа:
   - `id` в `SignUpResponse` и `CreateChatResponse` описаны как `number` без `format`, поэтому станут `double`.
