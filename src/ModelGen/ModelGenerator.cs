@@ -38,8 +38,17 @@ public static class ModelGenerator
             foreach (JsonProperty property in properties.EnumerateObject())
             {
                 var propertyName = property.Name;
+
+                var jsonNameAttribute = "";
+
+                if (propertyName.Contains('_'))
+                {
+                    jsonNameAttribute =
+                        $"[property: System.Text.Json.Serialization.JsonPropertyName(\"{propertyName}\")] ";
+                }
+
                 props.Add(
-                    $"{FieldTypeMapper.Transform(property.Value)}{(requiredNames.Contains(propertyName) ? "" : "?")} {FieldNameMapper.Transform(propertyName)}"
+                    $"{jsonNameAttribute}{FieldTypeMapper.Transform(property.Value)}{(requiredNames.Contains(propertyName) ? "" : "?")} {FieldNameMapper.Transform(propertyName)}"
                 );
             }
 

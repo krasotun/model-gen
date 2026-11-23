@@ -1,0 +1,51 @@
+{
+  "definitions": {
+    "UserResponse": {
+      "required": [
+        "id",
+        "first_name",
+        "second_name",
+        "display_name",
+        "login",
+        "avatar",
+        "phone",
+        "email"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "User id"
+        },
+        "first_name": {
+          "type": "string",
+          "description": "First name"
+        },
+        "second_name": {
+          "type": "string",
+          "description": "Second name"
+        },
+        "display_name": {
+          "type": "string",
+          "description": "Display name"
+        },
+        "login": {
+          "type": "string",
+          "description": "User login - unique"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "User email - unique"
+        },
+        "phone": {
+          "type": "string",
+          "description": "User phone"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "Avatar"
+        }
+      }
+    }
+  }
+}

@@ -2,7 +2,7 @@
 
 Консольная программа, которая читает `swagger.json` и генерирует C#-код моделей: по одному `record` на каждую схему из раздела `definitions`.
 
-> Статус: проект в разработке. Готово преобразование имён полей (`first_name` → `FirstName`). `ModelGenerator.Generate` читает `definitions` через `JsonDocument` и строит `record` для одной схемы. Типы полей: `string` → `string`, `integer` → `int`, `number` → `double` (`number` с `format: integer` → `int`), массив скаляров одного уровня → `T[]` (`format` элемента учитывается). Поле без `type` (`$ref`) и массив в массиве → `NotSupportedException`. Поле, которого нет в `required` помечается знаком ? - пример `int? Id`. Ограничение: при нескольких схемах в `definitions` вывод некорректен — поддержка в следующем шаге. Консольная программа к генератору ещё не подключена, `make run` печатает заглушку.
+> Статус: проект в разработке. Готово преобразование имён полей (`first_name` → `FirstName`). `ModelGenerator.Generate` читает `definitions` через `JsonDocument` и строит `record` для одной схемы. Типы полей: `string` → `string`, `integer` → `int`, `number` → `double` (`number` с `format: integer` → `int`), массив скаляров одного уровня → `T[]` (`format` элемента учитывается). Поле без `type` (`$ref`) и массив в массиве → `NotSupportedException`. Поле, которого нет в `required` помечается знаком ? - пример `int? Id`. Поле с подчёркиванием в имени (`first_name`) получает атрибут `[property: JsonPropertyName("first_name")]` с исходным именем, поле без подчёркиваний — без атрибута. Ограничение: при нескольких схемах в `definitions` вывод некорректен — поддержка в следующем шаге. Консольная программа к генератору ещё не подключена, `make run` печатает заглушку.
 
 ## Что делает
 
@@ -22,7 +22,7 @@
 На выходе — объявление модели:
 
 ```csharp
-public record UserResponse(int Id, string FirstName, string Login);
+public record UserResponse(int Id, [property: System.Text.Json.Serialization.JsonPropertyName("first_name")] string FirstName, string Login);
 ```
 
 Так для каждой схемы из `definitions`. Задуманный запуск: `model-gen path/to/swagger.json`, результат — файл `Models.cs`.
@@ -50,6 +50,7 @@ public record UserResponse(int Id, string FirstName, string Login);
   - `email` и `phone` есть в `required` у `ChatUserResponse`, но нет в `properties`. Генератор их пропустит: поля строятся только по `properties`.
 
 - **Обязательность.** Поле из списка `required` схемы — без знака (`int Id`). Поле вне `required` — со знаком `?` (`int? Id`, `Resource? File`). Если у схемы нет `required`, все поля получают `?`.
+- **Имена JSON.** Поле с подчёркиванием в имени (`first_name`) получает атрибут `[property: System.Text.Json.Serialization.JsonPropertyName("first_name")]` с исходным именем из JSON — так сгенерированная модель сохраняет snake_case-контракт на границе. Поле без подчёркиваний генерируется без атрибута.
 - **Кривой вход.**
   - Имя поля, которое не переводится в PascalCase (например, `first__Name`): вся модель пропускается, в консоль выводится ворнинг, остальные модели генерируются. Открыто: если на пропущенную модель ссылается `$ref`, `Models.cs` не соберётся.
   - Нет раздела `definitions`: ошибка с сообщением, ненулевой код выхода, `Models.cs` не создаётся.
