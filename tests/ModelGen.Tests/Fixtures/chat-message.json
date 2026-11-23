@@ -1,0 +1,39 @@
+{
+  "definitions": {
+    "ChatMessage": {
+      "required": ["id", "user_id", "chat_id", "time", "type", "content"],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Message id"
+        },
+        "user_id": {
+          "type": "integer",
+          "description": "User id"
+        },
+        "chat_id": {
+          "type": "integer",
+          "description": "Chat id"
+        },
+        "time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Message sent time"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["message", "file"],
+          "description": "Message type"
+        },
+        "content": {
+          "type": "string",
+          "description": "Message content (message text for messages and resourceId for files)"
+        },
+        "file": {
+          "$ref": "#/definitions/Resource",
+          "description": "File"
+        }
+      }
+    }
+  }
+}

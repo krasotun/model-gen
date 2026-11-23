@@ -2,7 +2,7 @@
 
 Консольная программа, которая читает `swagger.json` и генерирует C#-код моделей: по одному `record` на каждую схему из раздела `definitions`.
 
-> Статус: проект в разработке. Готово преобразование имён полей (`first_name` → `FirstName`). `ModelGenerator.Generate` читает `definitions` через `JsonDocument` и строит `record` для одной схемы. Типы полей: `string` → `string`, `integer` → `int`, `number` → `double` (`number` с `format: integer` → `int`), массив скаляров одного уровня → `T[]` (`format` элемента учитывается). Поле без `type` (`$ref`) и массив в массиве → `NotSupportedException`. `required` пока не читается. Ограничение: при нескольких схемах в `definitions` вывод некорректен — поддержка в следующем шаге. Консольная программа к генератору ещё не подключена, `make run` печатает заглушку.
+> Статус: проект в разработке. Готово преобразование имён полей (`first_name` → `FirstName`). `ModelGenerator.Generate` читает `definitions` через `JsonDocument` и строит `record` для одной схемы. Типы полей: `string` → `string`, `integer` → `int`, `number` → `double` (`number` с `format: integer` → `int`), массив скаляров одного уровня → `T[]` (`format` элемента учитывается). Поле без `type` (`$ref`) и массив в массиве → `NotSupportedException`. Поле, которого нет в `required` помечается знаком ? - пример `int? Id`. Ограничение: при нескольких схемах в `definitions` вывод некорректен — поддержка в следующем шаге. Консольная программа к генератору ещё не подключена, `make run` печатает заглушку.
 
 ## Что делает
 
@@ -47,8 +47,9 @@ public record UserResponse(int Id, string FirstName, string Login);
   Известная кривизна входа:
   - `id` в `SignUpResponse` и `CreateChatResponse` описаны как `number` без `format`, поэтому станут `double`.
   - `user` в `last_message` у `ChatsResponse` - имеет ошибочный format date-time. У `$ref` есть соседи. Генератор будет игнорировать соседей. `user` будет обработан, когда появится поведение с `$ref`.
+  - `email` и `phone` есть в `required` у `ChatUserResponse`, но нет в `properties`. Генератор их пропустит: поля строятся только по `properties`.
 
-- **Обязательность.** Открыто: как отличить в `record` поле из `required` от необязательного.
+- **Обязательность.** Поле из списка `required` схемы — без знака (`int Id`). Поле вне `required` — со знаком `?` (`int? Id`, `Resource? File`). Если у схемы нет `required`, все поля получают `?`.
 - **Кривой вход.**
   - Имя поля, которое не переводится в PascalCase (например, `first__Name`): вся модель пропускается, в консоль выводится ворнинг, остальные модели генерируются. Открыто: если на пропущенную модель ссылается `$ref`, `Models.cs` не соберётся.
   - Нет раздела `definitions`: ошибка с сообщением, ненулевой код выхода, `Models.cs` не создаётся.

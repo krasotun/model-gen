@@ -54,6 +54,27 @@ public class ModelGeneratorTests
         Assert.Equal(expected, ModelGenerator.Generate(swaggerJson));
     }
 
+    [Fact]
+    public void Generates_record_for_schema_with_not_required_fields()
+    {
+        var swaggerJson = ReadFixture("chat-message.json");
+
+        var expected =
+            "public record ChatMessage(int Id, int UserId, int ChatId, DateTimeOffset Time, string Type, string Content, Resource? File);";
+
+        Assert.Equal(expected, ModelGenerator.Generate(swaggerJson));
+    }
+
+    [Fact]
+    public void Generates_record_for_schema_when_required_is_missing()
+    {
+        var swaggerJson = ReadFixture("sticker.json");
+
+        var expected = "public record Sticker(int? Id, string? Path);";
+
+        Assert.Equal(expected, ModelGenerator.Generate(swaggerJson));
+    }
+
     private static string ReadFixture(string name)
     {
         var path = Path.Combine(AppContext.BaseDirectory, "Fixtures", name);

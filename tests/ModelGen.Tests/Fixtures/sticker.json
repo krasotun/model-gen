@@ -1,0 +1,20 @@
+{
+  "definitions": {
+    "Sticker": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "format": "integer",
+          "example": 123,
+          "description": "Sticker id (send to chat with WS)"
+        },
+        "path": {
+          "type": "string",
+          "example": "/stickers/2346-dfsg-425-sdfs/14534.gif",
+          "description": "Url for sticker resource(image)"
+        }
+      }
+    }
+  }
+}

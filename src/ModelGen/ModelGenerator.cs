@@ -21,6 +21,16 @@ public static class ModelGenerator
             var name = definition.Name;
             var properties = definition.Value.GetProperty("properties");
 
+            var requiredNames = new HashSet<string>();
+
+            if (definition.Value.TryGetProperty("required", out var requiredElementData))
+            {
+                foreach (var el in requiredElementData.EnumerateArray())
+                {
+                    requiredNames.Add(el.GetString() ?? "");
+                }
+            }
+
             sb.Append(name).Append('(');
 
             List<string> props = [];
@@ -29,7 +39,7 @@ public static class ModelGenerator
             {
                 var propertyName = property.Name;
                 props.Add(
-                    $"{FieldTypeMapper.Transform(property.Value)} {FieldNameMapper.Transform(propertyName)}"
+                    $"{FieldTypeMapper.Transform(property.Value)}{(requiredNames.Contains(propertyName) ? "" : "?")} {FieldNameMapper.Transform(propertyName)}"
                 );
             }
 
